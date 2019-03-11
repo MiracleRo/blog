@@ -1,11 +1,10 @@
 ---
 title: 常见html标签的使用
 date: 2019-03-04 20:59:18
-tags:
+categories: 学习笔记
+tags: 
+- HTML
 ---
-
-## 常用的HTML标签介绍
-
 ## 1. &lt;iframe&gt; 
 HTML内联框架元素 &lt;iframe&gt; 表示嵌套的浏览上下文，有效地将另一个HTML页面嵌入到当前页面中。   
 也就是说&lt;iframe&gt;这个标签通常用作显示网页使用   

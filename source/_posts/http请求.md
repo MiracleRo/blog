@@ -1,7 +1,9 @@
 ---
 title: http请求
 date: 2019-02-24 22:06:07
-tags:
+categories: 学习笔记
+tags: 
+- HTTP
 ---
 
 # 什么是HTTP
