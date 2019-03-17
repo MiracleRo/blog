@@ -22,7 +22,7 @@ HTTP请求一般分为4个部分：
 
 example:    
 
-```
+```http
 GET /sample.jsp HTTP/1.1      //请求方法 请求路径  协议/版本
 Accept:image/gif.image/jpeg,*/*   // 请求头
 Accept-Language:zh-cn
@@ -55,7 +55,7 @@ HTTP应答与HTTP请求相似，HTTP响应也由4个部分构成：
 4. 响应正文
 
 explame:
-```
+```http
 HTTP/1.1 200 OK                  //  协议状态/版本 响应短语
 Server:Apache Tomcat/5.0.12      // 请求头
 Date:Mon,6Oct2003 13:23:42 GMT
@@ -118,21 +118,21 @@ example:
 
 1. 基本用法
 
-```
+```Bash
 curl http://www.example.com
 ```
 这样网站的HTML就会显示在终端了
 
 2.  可以使用curl的内置option:-o(小写)保存网页:
 
-```
+```Bash
 curl -o example.html http://www.example.com
 ```
 
 3. 指定proxy服务器以及其端口:  
 很多时候上网需要用到代理服务器(比如是使用代理服务器上网或者因为使用curl别人网站而被别人屏蔽IP地址的时候)，幸运的是curl通过使用内置option：-x来支持设置代理
 
-```
+```Bash
 curl -x 192.168.100.100:1080 http://www.example.com
 ```
 
@@ -140,13 +140,13 @@ curl -x 192.168.100.100:1080 http://www.example.com
 
 保存http的response里面的cookie信息。内置option:-c（小写）
 
-```
+```Bash
 curl -c cookiec.txt  http://www.example.com
 ```
 执行后cookie信息就被存到了cookiec.txt里面了   
 
 保存http的response里面的header信息。内置option: -D
-```
+```Bash
 curl -D cookied.txt http://www.example.com
 ```
 
@@ -155,7 +155,7 @@ curl -D cookied.txt http://www.example.com
 5. 模仿浏览器
 有些网站需要使用特定的浏览器去访问他们，有些还需要使用某些特定的版本。curl内置option:-A可以让我们指定浏览器去访问网站
 
-```
+```Bash
 curl -A "Mozilla/4.0 (compatible; MSIE 8.0; Windows NT 5.0)" http://www.example.com
 ```
 这样服务器端就会认为是使用IE8.0去访问的
