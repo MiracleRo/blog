@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>ad-test</title>
+    <link href='https://xiaojiding.com/adfile/ad.css' rel='stylesheet'></link>
+  </head>
+  <body>
+    <div id='content'></div>
+  </body>
+  <script src="https://xiaojiding.com/adfile/jq.js"></script>
+  <script src="https://xiaojiding.com/adfile/userAgent.js"></script>
+  <script>
+  (function(){
+    var clickUrl = ''
+    Array.prototype.contains = function(needle) {
+		  for (i in this) {
+			  if (this[i].indexOf(needle) > 0)
+				  return i
+		  }
+		  return -1;
+	  }
+    var md = new MobileDetect(window.navigator.userAgent)
+    var device_type = navigator.userAgent
+	  var md = new MobileDetect(device_type)
+	  var os = md.os()
+    var model = ""
+    var model_type = 2
+    var user_agent = "Mozilla/5.0 (iPhone; CPU iPhone OS 11_0 like Mac OS X) AppleWebKit/604.1.38 (KHTML, like Gecko) Version/11.0 Mobile/15A372 Safari/604.1"
+    var brand = md.mobile() ? md.mobile() : 'iPhone'
+    if (os == "iOS") {
+		  os = md.os() + md.version("iPhone");
+      model = md.mobile();
+      model_type = 2
+      user_agent = window.navigator.userAgent
+	  } else if (os == "AndroidOS") {//Android系统的处理
+		  os = md.os() + md.version("Android");
+		  var sss = device_type.split(";");
+      var i = sss.contains("Build/");
+      user_agent = window.navigator.userAgent
+      model_type = 1
+		  if (i > -1) {
+			  model = sss[i].substring(0, sss[i].indexOf("Build/"));
+		  }
+    } else {
+      model = 'iPhone'
+      model_type = 2
+    }
+    var url = "https://api.aiclk.com/v3/json";
+    var data = {
+      media: {
+        type: 1,
+        app: {
+          package_name: "InternetRadio.all",
+          app_version: "1.2.3"
+        },
+        site: {
+          domain: "xx",
+          urls: "xx",
+          title: "xx",
+          keywords: "xx"
+        },
+        browser: {
+          user_agent: user_agent
+        }
+      },
+      client: { type: 3, version: "1.6.11" },
+      device: {
+        id_idfa: "ssss",
+        id_imei: "dddd",
+        height: 1136,
+        width: 640,
+        brand: brand,
+        model: model,
+        os_version: "1.1.2",
+        os_type: model_type
+      },
+      adslot: {
+        id: "7301708",
+        type: 1,
+        height: 275,
+        width: 375
+      },
+      network: {
+        type: 1,
+      }
+    };
+    $('#content').click(function () {
+      if (clickUrl) {
+       var images = new Image()
+       images.src = clickUrl
+      }
+      getAjax(2)
+      postFeedBack(2)
+    })
+    data = JSON.stringify(data)
+    $.ajax({
+      headers: {
+        "Content-type": "application/json"
+      },
+      url: url,
+      type: 'post',
+      data: data,
+      dataType: 'json',
+      success: function(res) {  
+        var content = JSON.parse(res.ads.native_material.text_icon_snippet)
+        var showUrl = content.imp.toString()
+        var str = `<a target='_blank' id="link"  class="link"  href=${content.c_url}>
+          <div class='ad'>
+            <div class='title'>${content.title}</div>
+             <img src=${content.url}>
+          </div>
+         </a>`
+       console.log(content.clk)
+       if (content.clk) {
+         clickUrl = content.clk.toString()
+         console.log(clickUrl)
+       }
+       $('#content').append(str)
+       getAjax(1)
+       var img = new Image()
+       img.src= showUrl
+       postFeedBack(1)
+      },
+      error: function(XMLHttpRequest, textStatus, errorThrown) {
+        console.log(XMLHttpRequest.status);
+        console.log(XMLHttpRequest.readyState);
+        console.log(textStatus);
+      },
+    })
+    function _defineProperty(obj, key, value) {
+      if (key in obj) {
+        Object.defineProperty(obj, key, {
+          value: value,
+          enumerable: true,
+          configurable: true,
+          writable: true
+        });
+      } else {
+        obj[key] = value;
+      }
+      return obj;
+    }
+
+  function getParamas() {
+  var result = {};
+  var params = window.location.href.split("?")[1];
+  params = params.split("&");
+  for (var i = 0; i < params.length; i++) {
+    var items = params[i].split("=");
+    var key = items[0];
+    var value = items[1];
+    var obj = _defineProperty({}, key, value);
+    Object.assign(result, obj);
+  }
+  return result;
+}
+function getNow() {
+  return Math.round(new Date().getTime() / 1000);
+}
+function postFeedBack(type) {
+  var params = getParamas()
+  var item = {
+    action_type: type,
+    app_name: params.app_name||params.app_id,
+    app_ver: "1.0.0",
+    brand: "",
+    cip: "1.25.81.170",
+    cuid: params.user_id,
+    data: [
+      {
+        category: "",
+        delivery_time: getNow(),
+        dispatch_time: getNow(),
+        duration: 0,
+        ext: {
+          city: "",
+          city_code: "",
+          district: "",
+          district_code: "",
+          log_id: "",
+          province: "",
+          rec_src: ""
+        },
+        id: params.id,
+        rtype: params.type,
+        key: window.location.href
+      }
+    ],
+    from: "",
+    imei: "",
+    log_id: randomRange(8),
+    os: getUserOs(),
+    qiyu_id: params.user_id,
+    smfw: {},
+    timestamp: getNow(),
+    user_agent: ""
+  };
+  var url = "https://xiaojiding.com/HttpService/ReceiveLog2";
+  item = JSON.stringify(item);
+  $.post(url, item)
+}
+
+function getUserOs() {
+  let os = "";
+  let sUsrAg = window.navigator.userAgent;
+
+  if (sUsrAg.indexOf("Android") > -1) {
+    os = "Android";
+  } else if (sUsrAg.indexOf("iPhone") > -1) {
+    os = "iOS";
+  } else {
+    os = "PC";
+  }
+  return os;
+}
+function randomRange(min, max) {
+  let returnStr = "";
+  let range = max ? Math.round(Math.random() * (max - min)) + min : min;
+  let charStr =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < range; i++) {
+    let index = Math.round(Math.random() * (charStr.length - 1));
+    returnStr += charStr.substring(index, index + 1);
+  }
+  return returnStr;
+}
+function getAjax (type) {
+      var params = getParamas();
+      var url = 'https://xiaojiding.com/HttpService/ad_track?key='+params.key+'&app_id=' +params.app_id+'&type='+params.type+'&id=' + params.id+'&user_id='+params.user_id+'&action_type='+type
+      $.get(url)
+    }
+  })()
+  </script>
+</html>
